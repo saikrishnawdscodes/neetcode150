@@ -49,3 +49,39 @@ class Solution:
 
 # TC : O(n) - we eliminate the O(k) for each ele by using the queue - with O(1) for deletion and insertion
 # SC : O(n) - extra queue used.
+
+
+
+# # Modifying the same thing - to see if we can find the minimum in the window, instead of maximum ?
+
+
+# # nums = [1,3,-1,-3,5,3,6,7]
+# # k = 3
+
+# nums = [1]
+# k = 1
+#  # expected op : [-1,-3,-3,-3,3,3]
+
+
+# from collections import deque
+
+# q = deque() # monotonically incresing queue - of nums indices now
+
+# l = 0
+# r = 0
+# output = []
+
+# while r < len(nums):
+#     while q and nums[q[-1]] > nums[r]:   # small change - here the elements need to be greater than the curr ele - for popping.
+#         # idea is to keep the minimum towards the left.
+#         q.pop()
+#     q.append(r)
+
+#     if l > q[0]:
+#         q.popleft()
+    
+#     if r+1 >= k:
+#         output.append(nums[q[0]])
+#         l += 1
+#     r += 1
+# print(output)
