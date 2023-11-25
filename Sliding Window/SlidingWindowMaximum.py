@@ -20,8 +20,8 @@
 # Finally comes the part where you append the o/p array - at the end of each o/p
 # handle the edge case - append the p/p array only if the window is atleast size k, not before that ! 
 
-# so, if the 2 indices l, r have a diff of k at the least - then we add the q[0] - which is the max ele in queue at any point in time to the o/p arr.
-# Then we increment the left pointer..
+# so, if r+1 is >=k - only then we add the q[0] - which is the max ele in queue at any point in time to the o/p arr.
+# Then we increment the left pointer.. and the right ptr.
 
 class Solution:
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
