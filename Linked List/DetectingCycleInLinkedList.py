@@ -15,4 +15,8 @@ class Solution:
                 return True
         return False
 
+# TC - O(n)
+# SC - O(1)
 
+# Logic : Use slow and fast pointers - to identify a loop. If at any point slow ptr is at the same place as fast ptr,
+# then that means there is a loop
