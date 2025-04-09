@@ -1,0 +1,40 @@
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def detectCycle(self, head: Optional[ListNode]) -> Optional[ListNode]:
+
+        slow = head
+        fast = head
+        intersection = None
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            if slow == fast:
+                intersection = slow
+                break
+
+        if not intersection:
+            return None
+        
+        slow2 = head
+        while slow!=slow2:   # you cant use the same do while stuff here - as the loop should straightaway start checking for presence of 
+                    # intersection - as unlike the find duplicate number floyd implementation - where there is defo a non cycle element present
+                    # before you come to the loop  - here there could be a loop right away!
+            slow2 = slow2.next
+            slow = slow.next
+        return slow  # this gets returned right away if the first node itself is the start of the loop
+
+        
+# TC - O(n); SC - O(1)
+# Logic here is similar to using the floyd's algorithm concept - except that here you are not sure if there is aloop present - so first you check that, and then if loop is present
+# you can start right from the place in floyd's that comes after finding the intersection. 
+# IMPORTANT THING TO REMEMBER IS - UNLIKE FLOYD WHERE YOU USE THE DO .. WHILE LOOP - YOU CANT DO THAT HERE - CAUSE THEY MAY OR MAY BE A NON CYCLE ELEMENT IN THE BEGINNIGN ITSELF
+# IF FIRST NODE ITSELF IS PART OF CYCLE - DO . WHILE WILL FAIL - SO STRAIGHT AWAY START COMPARING like while slow2!= slow  
+        
+
+        
+        
