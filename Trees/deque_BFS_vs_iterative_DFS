@@ -1,0 +1,91 @@
+Iterative DFS using stack and BFS using deque are actually quite similar code wise - for invert binary tree code except for the pop() used for the DFS stack - and the popleft() used for the queue.
+Isnt it ?
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+# DFS
+
+class Solution:
+    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        if not root:
+            return None
+        stack = [root]
+        while stack:
+            node = stack.pop()
+            node.left, node.right = node.right, node.left
+            if node.left:
+                stack.append(node.left)
+            if node.right:
+                stack.append(node.right)
+        return root
+    
+# BFS
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        if not root:
+            return None
+        queue = deque([root])
+        while queue:
+            node = queue.popleft()
+            node.left, node.right = node.right, node.left
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+        return root
+
+
+
+
+The iterative implementations of DFS and BFS are remarkably similar in their structure, differing primarily in the data structure used to manage the nodes to visit and, consequently, the order in which they are processed.
+
+Let's break down the commonalities and the key difference:
+
+Similarities in Code Structure:
+
+Initialization: Both algorithms typically start by putting the root node (or the starting node in a graph) into their respective data structures (stack for DFS, queue for BFS). They also often have a mechanism to keep track of visited nodes (though the invertTree example implicitly visits nodes as it processes them).
+
+Iteration: Both use a while loop that continues as long as there are nodes in the data structure to process.
+
+Node Retrieval: Inside the loop, they retrieve a node from the data structure:
+
+DFS: stack.pop() - Retrieves the most recently added node (LIFO).
+BFS: queue.popleft() - Retrieves the least recently added node (FIFO).
+Processing the Node: In both, you perform the desired operation on the retrieved node (in the invertTree case, it's swapping the children).
+
+Adding Neighbors/Children: After processing the current node, you add its unvisited neighbors (or children in a tree) to the data structure:
+
+DFS: stack.append() - Adds neighbors to the top of the stack, so they will be visited sooner (deeper exploration).
+BFS: queue.append() - Adds neighbors to the back of the queue, so nodes at the same level are visited before going deeper.
+The Key Difference: pop() vs. popleft()
+
+The single, but fundamental, difference lies in how the next node to be processed is selected:
+
+stack.pop() (DFS): By taking from the end of the list (which acts as the top of the stack), DFS prioritizes visiting the nodes that were added most recently. This leads to exploring down a single branch as far as possible before backtracking.
+
+queue.popleft() (BFS): By taking from the front of the deque, BFS prioritizes visiting the nodes that were added earliest. Since neighbors are added to the end of the queue, this ensures that all nodes at the current level are visited before moving to the next level.
+
+Analogy:
+
+Imagine a group of people exploring a cave:
+
+DFS (Stack): The explorers always choose the most recently discovered passage to go deeper. If they hit a dead end, they backtrack to the last junction and try the next most recent passage.
+
+BFS (Queue): The explorers spread out and explore all the paths immediately connected to the entrance. Then, from those new locations, they explore all the new paths, and so on. They explore in layers of distance from the entrance.
+
+Conclusion:
+
+You are absolutely right. The iterative code structure for DFS and BFS is very similar. The choice of a stack (LIFO) for DFS and a queue (FIFO) for BFS is the primary distinction that dictates the order of traversal and the fundamental nature of each algorithm. This elegant difference in the data structure used leads to vastly different exploration patterns of the tree or graph.

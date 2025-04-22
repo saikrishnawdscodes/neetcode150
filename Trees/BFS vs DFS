@@ -1,0 +1,96 @@
+Show me examples of traversing a binary tree using a classic BFS and DFS algorithm.
+The code above - for this invert binary tree problem is a DFS one , isnt it ?
+When is DFS / BFS preferred over the other ? What is the intuitive difference between the 2 - do you use diff data structures for both ?
+
+
+You are absolutely correct! The invertTree code you provided is an example of Depth-First Search (DFS). Let's break down why and then look at BFS.
+
+Why invertTree is DFS:
+
+The invertTree function explores as far as possible along one branch (going down to the left subtree, then the right subtree of that left subtree, and so on) before backtracking. This "go deep first" approach is the defining characteristic of DFS. The recursive calls self.invertTree(root.left) and self.invertTree(root.right) are made after processing the current node (swapping its children), ensuring that the subtrees are fully processed before the function returns up the call stack.
+
+Examples of Binary Tree Traversal:
+
+Let's consider the following binary tree for our examples:
+
+    1
+   / \
+  2   3
+ / \   \
+4   5   6
+1. Breadth-First Search (BFS):
+
+BFS explores the tree level by level. We use a queue to keep track of the nodes to visit.
+
+Python
+
+from collections import deque
+from typing import Optional
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+def bfs_traversal(root: Optional[TreeNode]) -> list[int]:
+    if not root:
+        return []
+
+    queue = deque([root])
+    visited = []
+
+    while queue:
+        current_node = queue.popleft()
+        visited.append(current_node.val)
+
+        if current_node.left:
+            queue.append(current_node.left)
+        if current_node.right:
+            queue.append(current_node.right)
+
+    return visited
+
+# Example usage:
+root = TreeNode(1)
+root.left = TreeNode(2)
+root.right = TreeNode(3)
+root.left.left = TreeNode(4)
+root.left.right = TreeNode(5)
+root.right.right = TreeNode(6)
+
+print("BFS Traversal:", bfs_traversal(root))  # Output: BFS Traversal: [1, 2, 3, 4, 5, 6]
+Intuitive Difference Between BFS and DFS:
+
+Imagine you are exploring a maze:
+
+BFS (Breadth-First Search): You explore all the paths that are one step away from your starting point. Then, you explore all the new paths that are two steps away, and so on. You are essentially expanding outwards in layers. This is like checking all your immediate neighbors before moving further down any single path.
+
+DFS (Depth-First Search): You pick one path and go as deep as you can until you hit a dead end. Then, you backtrack to the last point where you had another option and explore that path. You are prioritizing going deep down one route before exploring siblings.
+
+Data Structures Used:
+
+BFS: Typically uses a Queue (First-In, First-Out). Nodes are added to the back of the queue and processed from the front, ensuring level-by-level exploration.
+
+DFS: Can be implemented using:
+
+Recursion: The function call stack implicitly acts as a stack, keeping track of the path taken. This is what the invertTree solution uses.
+Explicit Stack (Iterative): You can also implement DFS iteratively using a Stack (Last-In, First-Out). You push the current node onto the stack and explore its neighbors by pushing them onto the stack.
+
+
+When is DFS Preferred Over BFS?
+
+Checking for the existence of a path: If you just need to know if a path exists between two nodes, DFS can sometimes find it more quickly if the target is deep in the tree along one of the initial branches explored.
+Exploring all possible paths: DFS is often used when you need to explore all possible paths in a tree or graph, such as finding all solutions to a maze or generating all permutations.
+Backtracking algorithms: Problems that involve backtracking often naturally lend themselves to a recursive DFS implementation.
+Space efficiency (in some cases): If the tree is very wide but not very deep, DFS might use less memory than BFS because it only needs to store the current path in the stack, whereas BFS might need to store many nodes at the same level in the queue.
+
+
+When is BFS Preferred Over DFS?
+
+Finding the shortest path in an unweighted graph: BFS guarantees finding the shortest path (in terms of the number of edges) because it explores level by level. The first time you reach the target node, you know it's via the shortest path.
+Finding the nodes at a certain level: BFS makes it easy to process all nodes at a specific depth in the tree.
+Exploring level by level: If the problem requires processing nodes in a level-by-level order, BFS is the natural choice (e.g., level order traversal).
+Avoiding infinite loops in graphs: In graphs with cycles, BFS can prevent getting stuck in an infinite loop by keeping track of visited nodes level by level. DFS needs explicit visited tracking to avoid cycles.
+Problems where solutions tend to be closer to the root: If you suspect that the desired solution is at a shallower level in the tree, BFS might find it faster.
+

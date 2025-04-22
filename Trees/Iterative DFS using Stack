@@ -1,0 +1,147 @@
+"Data Structures Used:
+
+
+BFS: Typically uses a Queue (First-In, First-Out). Nodes are added to the back of the queue and processed from the front, ensuring level-by-level exploration.
+
+DFS: Can be implemented using:
+
+Recursion: The function call stack implicitly acts as a stack, keeping track of the path taken. This is what the invertTree solution uses.
+
+Explicit Stack (Iterative): You can also implement DFS iteratively using a Stack (Last-In, First-Out). You push the current node onto the stack and explore its neighbors by pushing them onto the stack."
+
+
+
+I want to understand this 'explicit stack' method - especially in the point of view of this iterative DFS code :
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        if not root:
+            return None
+        stack = [root]
+        while stack:
+            node = stack.pop()
+            node.left, node.right = node.right, node.left
+            if node.left:
+                stack.append(node.left)
+            if node.right:
+                stack.append(node.right)
+        return root
+
+
+
+Is the stack always implemented using a list - by just using the pop and append methods ?
+There are other ways to implement stacks right ? In general for coding interviews - what kind of stack implementation is asked frequently ?
+
+
+
+
+You've hit a great point! The iterative DFS for invertTree you've provided is an excellent example of using an explicit stack. Let's break down how it works and then address your questions about stack implementation.
+
+How the Iterative DFS invertTree Works with an Explicit Stack:
+
+Initialization:
+
+Python
+
+if not root:
+    return None
+stack = [root]
+If the root is None, there's nothing to invert, so we return None.
+We initialize a stack (a Python list used as a stack) and push the initial root node onto it. This signifies the starting point of our traversal.
+Iteration:
+
+Python
+
+while stack:
+    node = stack.pop()
+    # ... process the node ...
+The while stack: loop continues as long as there are nodes in the stack to process. This ensures that we explore all reachable nodes.
+node = stack.pop(): This is the core of the DFS using a stack. pop() removes and returns the element at the top of the stack (LIFO - Last-In, First-Out). This means we are always processing the node that was most recently added, leading to a depth-first exploration.
+Invert the Current Node:
+
+Python
+
+node.left, node.right = node.right, node.left
+Once a node is popped from the stack, we perform the inversion operation: swapping its left and right children.
+Push Children onto the Stack:
+
+Python
+
+if node.left:
+    stack.append(node.left)
+if node.right:
+    stack.append(node.right)
+After inverting the current node, we push its children onto the stack. Crucially, the order in which we push the children determines the order of traversal. In this specific invertTree implementation, the order doesn't strictly matter for the final inverted result, as we are performing the inversion at each node we visit. However, in other DFS traversal scenarios (like pre-order, in-order, post-order), the order of pushing matters significantly.
+Return the Root:
+
+Python
+
+return root
+After the while loop finishes (meaning the stack is empty and all reachable nodes have been processed and inverted), the original root of the (now inverted) tree is returned.
+Is the stack always implemented using a list with pop() and append()?
+
+In Python, using a list with its append() and pop() methods is a very common and efficient way to implement a stack for many practical purposes, including coding interviews. Python lists provide O(1) average time complexity for both append (at the end) and pop (from the end), which are the fundamental stack operations.
+
+Are there other ways to implement stacks?
+
+Yes, there are other ways to implement a stack in Python and other languages:
+
+collections.deque: The collections.deque (double-ended queue) can also be used as a stack. It provides O(1) time complexity for both append() and pop() from either end, making it potentially slightly more performant than a list for stack operations, especially in scenarios with frequent appends and pops.
+
+Python
+
+from collections import deque
+stack = deque([root])
+node = stack.pop()
+stack.append(node.left)
+Linked List: You can implement a stack using a singly linked list. The head of the linked list would represent the top of the stack. Pushing would involve creating a new node and making it the new head, and popping would involve removing the head.
+
+Python
+
+class StackNode:
+    def __init__(self, val):
+        self.val = val
+        self.next = None
+
+class LinkedListStack:
+    def __init__(self):
+        self.head = None
+
+    def push(self, val):
+        new_node = StackNode(val)
+        new_node.next = self.head
+        self.head = new_node
+
+    def pop(self):
+        if not self.head:
+            return None
+        val = self.head.val
+        self.head = self.head.next
+        return val
+
+    def is_empty(self):
+        return not self.head
+Custom Array-Based Implementation: You could also implement a stack using a fixed-size array and a pointer to the top element. However, this has limitations with dynamic resizing.
+
+In general for coding interviews, what kind of stack implementation is asked frequently?
+
+For coding interviews in Python, using a Python list with append() and pop() is the most common and generally preferred approach. It's concise, readily available, and performs well for typical stack operations.
+
+While knowing about collections.deque is good (as it can be slightly more efficient), it's less frequently explicitly required unless performance is a very critical aspect of the problem or if you need double-ended queue functionality as well.
+
+Implementing a stack using a linked list is a good exercise to demonstrate your understanding of linked lists, but it's less often the direct requirement in a coding interview for a stack unless the problem context specifically involves linked lists.
+
+Key Takeaway for Interviews:
+
+Be comfortable using Python lists as stacks with append() and pop().
+Understand the LIFO (Last-In, First-Out) principle of stacks.
+Know that collections.deque is another viable option in Python.
+Be prepared to explain how a stack works conceptually, even if you're using a built-in data structure.
+The iterative DFS invertTree example clearly shows how an explicit stack allows you to control the order of node processing and achieve a depth-first traversal without relying on the recursion call stack.

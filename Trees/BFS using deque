@@ -1,0 +1,63 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        if not root:
+            return None
+        queue = deque([root])
+        while queue:
+            node = queue.popleft()
+            node.left, node.right = node.right, node.left
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+        return root
+
+
+
+
+
+Here in this BFS solution - when you initialize the deque with deque ([root]) - is the entire tree being passed as an iterable - starting with the root node ?
+
+Or is it just the top most root node alone being put inside the deque ?
+
+
+
+
+When you initialize the deque with deque([root]), you are only putting the root node itself into the deque as the initial element.
+
+Here's why:
+
+Iterable for Initialization: As we discussed, the deque() constructor takes an iterable. [root] is a list, which is an iterable. This list contains a single element: the root node.
+
+BFS Process: BFS explores the tree level by level. To do this, you need to start with the root, then process its children, then their children, and so on. The deque acts as the queue that holds the nodes to be visited.
+
+Step-by-Step Breakdown:
+
+queue = deque([root]): At this point, the queue contains only the root node.
+while queue:: The loop continues as long as there are nodes in the queue to process.
+node = queue.popleft(): In the first iteration, node will be the root node.
+node.left, node.right = node.right, node.left: The left and right children of the root are swapped.
+if node.left: queue.append(node.left): If the root has a left child, that child is added to the end of the queue.
+if node.right: queue.append(node.right): If the root has a right child, that child is added to the end of the queue.
+In the subsequent iterations of the while loop:
+
+popleft() will retrieve the nodes that were added (the children of the root).
+Their children will then be added to the end of the queue.
+Analogy:
+
+Think of it like visiting houses in a neighborhood level by level.
+
+Initially, your queue contains only the starting house (the root).
+You visit the starting house (popleft()).
+You note down the addresses of its immediate neighbors (the left and right children) and add them to the end of your list of houses to visit (append()).
+Then, you visit the next house in your list (which would be one of the root's children), find its neighbors, and add them to the end of the list.
+The deque ensures that you process all the nodes at the current level before moving on to the next level because you are always adding new nodes to the back (append) and taking out nodes from the front (popleft).
+
+Therefore, deque([root]) initializes the BFS process by putting only the starting point (the root node) into the queue. The rest of the tree is explored and added to the queue as the algorithm progresses.

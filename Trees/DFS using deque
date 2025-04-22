@@ -1,0 +1,195 @@
+# Beautiful freaking explanation from Gemini : 
+# ================================================
+# ================================================
+
+# Let's break down how the recursion works in this invertTree solution, identify the break condition, and analyze its time and space complexity.
+
+# How the Recursion Works:
+
+# The invertTree function works by applying the "inversion" operation at each node of the binary tree. Here's a step-by-step breakdown of how the recursion unfolds:
+
+# Initial Call: The function is initially called with the root of the binary tree.
+
+# Base Case (Break Condition):
+
+# Python
+
+# if not root:
+#     return None
+# This is the crucial break condition for the recursion. If the current root is None (meaning we've reached beyond a leaf node or the initial tree was empty), the function simply returns None. This stops the recursive calls down that path.
+
+# Swap Children:
+
+# Python
+
+# temp = root.left
+# root.left = root.right
+# root.right = temp
+# For the current root node, this block of code swaps its left and right children. This is the core operation of inverting a tree at a single node.
+
+# Recursive Calls:
+
+# Python
+
+# self.invertTree(root.left)
+# self.invertTree(root.right)
+# After swapping the children of the current root, the function recursively calls itself on the left child (root.left) and then on the right child (root.right).
+
+# self.invertTree(root.left): This call will repeat the same process for the subtree rooted at the original right child (which is now the left child after the swap). It will go down the left subtree, swapping children at each node until it hits the base case (None).
+# self.invertTree(root.right): Similarly, this call will repeat the process for the subtree rooted at the original left child (which is now the right child after the swap), going down the right subtree and swapping children.
+# Return Root:
+
+# Python
+
+# return root
+# After the recursive calls for both left and right subtrees have completed (meaning the entire subtree rooted at the current root has been inverted), the function returns the (now inverted) root node. This return value is then used by the calling function (its parent in the recursion).
+
+# Think of it like a depth-first traversal:
+
+# The recursion goes down the tree, processing each node. When it reaches a leaf or a None node, it starts to return. As it returns up the call stack, the swaps performed at each level accumulate, eventually inverting the entire tree.
+
+# Example:
+
+# Consider a simple tree:
+
+#     1
+#    / \
+#   2   3
+# invertTree(1) is called.
+# root is not None. Swap 1.left (2) and 1.right (3). Tree becomes:
+#     1
+#    / \
+#   3   2
+# invertTree(3) is called.
+# root (now 3) is not None. Swap 3.left (initially None) and 3.right (initially None). No change.
+# invertTree(None) is called (from 3.left). Returns None.
+# invertTree(None) is called (from 3.right). Returns None.
+# invertTree(3) returns 3.
+# invertTree(2) is called.
+# root (now 2) is not None. Swap 2.left (initially None) and 2.right (initially None). No change.
+# invertTree(None) is called (from 2.left). Returns None.
+# invertTree(None) is called (from 2.right). Returns None.
+# invertTree(2) returns 2.
+# invertTree(1) returns 1 (the root of the now inverted tree).
+# The final inverted tree is:
+
+#     1
+#    / \
+#   3   2
+# Time Complexity:
+
+# The function visits each node in the binary tree exactly once. For each node, it performs a constant amount of work (swapping the left and right children).
+# Therefore, the time complexity is O(N), where N is the number of nodes in the binary tree.
+# Space Complexity:
+
+# The space complexity of a recursive algorithm 1  is determined by the maximum depth of the recursion stack. In the case of a binary tree traversal (like this inversion), the depth of the recursion stack is related to the height of the tree.   
+# 1.
+# github.com
+# github.com
+
+# Worst Case (Skewed Tree): If the binary tree is heavily skewed (like a linked list), the height of the tree can be equal to N (the number of nodes). In this case, the recursion stack can go as deep as N, leading to a space complexity of O(N).
+
+# 1
+#  \
+#   2
+#    \
+#     3
+# For this tree, the recursive calls would be invertTree(1), invertTree(2), invertTree(3), invertTree(None). The stack depth is proportional to the number of nodes.
+
+# Best Case (Balanced Tree): If the binary tree is balanced (like a complete binary tree), the height of the tree is approximately log₂(N). In this case, the maximum depth of the recursion stack would be proportional to the height, leading to a space complexity of O(log N).
+
+#     2
+#    / \
+#   1   3
+# The recursion depth here is much smaller compared to a skewed tree.
+
+# In summary, the space complexity due to the recursive call stack is:
+
+# O(N) in the worst case (skewed tree).
+# O(log N) in the best case (balanced tree).
+# When discussing the space complexity of tree algorithms using recursion, it's important to specify the worst-case scenario, which is often assumed unless stated otherwise. Therefore, the space complexity is typically considered O(H), where H is the height of the tree. In the worst case, H = N, and in the best case, H = log N.
+
+# Therefore:
+
+# Time Complexity: O(N)
+# Space Complexity: O(H), which is O(N) in the worst case (skewed tree) and O(log N) in the best case (balanced tree) due to the recursion stack.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+The recursion code for the invert binary tree -
+
+
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        if not root: return None
+
+        root.left, root.right = root.right, root.left
+
+        self.invertTree(root.left)
+        self.invertTree(root.right)
+
+        return root
+
+
+
+Because we first come to the tree's root node and then traverse / swap the left and right - am I right in saying we are following a pre-order traversal here ?
+
+
+
+You are very close, but not quite exactly pre-order in the traditional sense of a traversal that collects node values.
+
+Let's break down the standard pre-order traversal and compare it to what the invertTree recursion does:
+
+Standard Pre-order Traversal (Value Collection):
+
+Process the current node: Visit the node (e.g., add its value to a list).
+Traverse the left subtree: Recursively perform pre-order on the left child.
+Traverse the right subtree: Recursively perform pre-order on the right child.
+invertTree Recursion:
+
+Check the base case: if not root: return None (This is part of the control flow).
+Process the current node: Swap the left and right children.
+Recursively invert the left subtree: self.invertTree(root.left)
+Recursively invert the right subtree: self.invertTree(root.right)
+Return the current node: return root
+The Key Difference:
+
+In invertTree, the "processing" we are doing at each node is the swapping of its children, not the collection of its value. The order in which we perform the recursive calls (left then right) is similar to the order in pre-order, but the operation at the node is a modification, not a visitation for data retrieval.
+
+Why it's DFS, but not strictly pre-order traversal for value collection:
+
+Depth-First Search (DFS): The recursive nature of the code, where we go deep into the left subtree before exploring the right subtree, clearly identifies it as a DFS approach.
+
+Not Standard Pre-order Traversal: Pre-order traversal is specifically defined by the order of visiting (typically to record or use the node's value): Node -> Left -> Right. While our recursive calls follow a similar pattern in terms of the order of exploring subtrees, the primary action at the "node" step is the inversion.
+
+Think of it this way:
+
+If you were to perform a standard pre-order traversal on the original tree and collect the values, you would get a specific sequence. If you were to perform a pre-order traversal on the inverted tree and collect its values, you would get a different sequence.
+
+The invertTree function modifies the tree structure in a depth-first manner. The order of the recursive calls ensures that the swapping happens at each node in a way that effectively mirrors the tree structure.
+
+Conclusion:
+
+You are right that the structure of the recursive calls (processing the current node before going to the left and then the right) resembles the order of operations in a pre-order traversal. However, because the "processing" is the inversion rather than a typical "visit" for value retrieval, it's more accurate to say that the invertTree function uses a depth-first search (DFS) approach to modify the tree structure. The order of recursion mirrors the exploration pattern of pre-order, but the goal is transformation, not traversal in the sense of collecting data.
